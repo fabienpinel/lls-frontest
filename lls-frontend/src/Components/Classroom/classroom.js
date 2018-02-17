@@ -1,45 +1,85 @@
 import React, { Component } from 'react';
-import './classroom.css'; 
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+} from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import './classroom.css';
 
 class Classroom extends Component {
     constructor() {
         super();
         this.state = {
-            students : [
-                {
-                    firstname: "Jean",
-                    lastname: "Macé",
-                }, 
-                {
-                    firstname: "Jean",
-                    lastname: "Macé2",
-                },
-                {
-                    firstname: "Jean",
-                    lastname: "Macé3",
-                },
-                {
-                    firstname: "Jean",
-                    lastname: "Macé4",
-                }
-            ]
+            tableConfig: {
+                fixedHeader: false,
+                fixedFooter: false,
+                stripedRows: true,
+                showRowHover: true,
+                selectable: false,
+                multiSelectable: false,
+                enableSelectAll: false,
+                deselectOnClickaway: true,
+                showCheckboxes: false
+            }
         };
     }
     render() {
         return (
             <section className="classroom">
-                    <div className={'student-wrapper'}>
-                        {this.state.students.map(function (student, index) {
-                            return <li
-                                id={"student-" + index}
-                                key={"student-" + index}
-                            >
-                            {student.firstname+" "+student.lastname}
-                            </li>;
-                        })}
-
-                    </div>
-                </section>
+            <Grid fluid>
+        <Row>
+          <Col mdOffset={2} s={12} md={8}>
+                <div className={'student-wrapper'}>
+                <Paper depth={2}>
+                    <Table
+                        fixedHeader={this.state.tableConfig.fixedHeader}
+                        fixedFooter={this.state.tableConfig.fixedFooter}
+                        selectable={this.state.tableConfig.selectable}
+                        multiSelectable={this.state.tableConfig.multiSelectable}
+                    >
+                        <TableHeader
+                            displaySelectAll={this.state.tableConfig.showCheckboxes}
+                            adjustForCheckbox={this.state.tableConfig.showCheckboxes}
+                            enableSelectAll={this.state.tableConfig.enableSelectAll}
+                        >
+                            <TableRow>
+                                <TableHeaderColumn 
+                                colSpan="2" 
+                                tooltip="List of all the students from this classroom" 
+                                style={{ textAlign: 'center' }}>
+                                    List of students
+              </TableHeaderColumn>
+                            </TableRow>
+                            <TableRow>
+                                <TableHeaderColumn tooltip="ID of the student">ID</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody
+                            displayRowCheckbox={this.state.tableConfig.showCheckboxes}
+                            deselectOnClickaway={this.state.tableConfig.deselectOnClickaway}
+                            showRowHover={this.state.tableConfig.showRowHover}
+                            stripedRows={this.state.tableConfig.stripedRows}
+                        >
+                            {this.props.studentList.map((student, index) => (
+                                <TableRow key={index}>
+                                    <TableRowColumn>{index}</TableRowColumn>
+                                    <TableRowColumn>{student.firstname + " " + student.lastname}</TableRowColumn>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    </Paper>
+                </div>
+          </Col>
+        </Row>
+      </Grid>
+            </section>
         );
     }
 }
