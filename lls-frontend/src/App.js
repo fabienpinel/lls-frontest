@@ -10,23 +10,30 @@ class App extends Component {
     this.state = {
       students: [
         {
-            firstname: "Jean",
-            lastname: "Macé",
+            firstname: "Queen",
+            lastname: "Elisabeth",
         },
         {
-            firstname: "Jean",
-            lastname: "Macé2",
+            firstname: "Queen",
+            lastname: "Mother",
         },
         {
-            firstname: "Jean",
-            lastname: "Macé3",
+            firstname: "Winston",
+            lastname: "Churchill",
         },
         {
-            firstname: "Jean",
-            lastname: "Macé4",
+            firstname: "Duke",
+            lastname: "of Edimburgh",
+        },
+        {
+            firstname: "Princess",
+            lastname: "Diana",
         }
     ]
     }
+  }
+  onDeleteStudentRequested(studentid){
+    this.setState(this.state.students.splice(studentid,1));
   }
   render() {
     return (
@@ -36,7 +43,9 @@ class App extends Component {
             title="Classroom manager"
             iconClassNameRight="muidocs-icon-class"
           />
-          <Classroom studentList={this.state.students}/>
+          <Classroom 
+          studentList={this.state.students}
+          callbackDeleteStudent={(studentid) => this.onDeleteStudentRequested(studentid) }/>
         </div>
       </MuiThemeProvider>
 
