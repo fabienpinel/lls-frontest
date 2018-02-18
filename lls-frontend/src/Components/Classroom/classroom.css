@@ -1,3 +1,12 @@
 .classroom{
     display: block;
 }
+.material-icons.white{
+    color: white !important;
+}
+.slider-container{
+    padding: 20px;
+}
+.gridtile:hover{
+    background: grey;
+}

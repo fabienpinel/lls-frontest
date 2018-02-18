@@ -12,29 +12,41 @@ class App extends Component {
         {
             firstname: "Queen",
             lastname: "Elisabeth",
+            picture: "./standard-pic.png"
         },
         {
             firstname: "Queen",
             lastname: "Mother",
+            picture: "./standard-pic.png"
         },
         {
             firstname: "Winston",
             lastname: "Churchill",
+            picture: "./standard-pic.png"
         },
         {
             firstname: "Duke",
             lastname: "of Edimburgh",
+            picture: "./standard-pic.png"
         },
         {
             firstname: "Princess",
             lastname: "Diana",
+            picture: "./standard-pic.png"
         }
     ]
     }
   }
+
   onDeleteStudentRequested(studentid){
-    this.setState(this.state.students.splice(studentid,1));
+    this.setState(this.deleteEntryFromArray(this.state.students, studentid));
   }
+
+  deleteEntryFromArray(array, entryid){
+    array.splice(entryid, 1);
+    return array;
+  }
+
   render() {
     return (
       <MuiThemeProvider>

@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.2.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "material-design-icons": "^3.0.1",
     "material-ui": "^0.20.0",
     "react": "^16.2.0",
@@ -13,7 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "jest --watch",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
