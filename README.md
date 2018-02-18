@@ -1,7 +1,7 @@
 # Front end technical test for LLS
 ## To run the project:
 
-- `cd lls-frontest`
+- `cd lls-frontend`
 
 - `npm install`
 
