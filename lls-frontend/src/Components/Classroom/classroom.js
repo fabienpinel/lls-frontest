@@ -213,6 +213,7 @@ class Classroom extends Component {
                     <IconButton
                         iconClassName={isWhiteTheme ? 'material-icons white' : 'material-icons'}
                         tooltip="Edit student"
+                        tooltipPosition="top-right"
                         data-id={index}
                         onClick={() => { this.editStudent(index) }}
                     >
@@ -221,6 +222,7 @@ class Classroom extends Component {
                 <IconButton
                         iconClassName={isWhiteTheme ? 'material-icons white' : 'material-icons'}
                         tooltip="Delete student"
+                        tooltipPosition="top-left"
                         onClick={() => { this.deleteStudentRequested(index) }}
                     >
                         delete</IconButton>
