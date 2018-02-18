@@ -54,6 +54,9 @@ class Classroom extends Component {
         };
     }
 
+    /*
+        MODAL display handlers
+    */
     // Edit modal handlers
     handleEditModalOpen() {
         this.setState({ editModalOpen: true });
@@ -79,6 +82,9 @@ class Classroom extends Component {
             this.state.studentLastnameBeingEdited);
         this.handleEditModalClose();
     }
+    /*
+        Form input changes
+    */
     handleFirstnameChange = (event) => {
         this.setState({
             studentFirstnameBeingEdited: event.target.value,
@@ -98,6 +104,7 @@ class Classroom extends Component {
                 studentFirstnameBeingEdited: this.props.studentList[studentid].firstname,
                 studentLastnameBeingEdited: this.props.studentList[studentid].lastname
             });
+        // show edit modal
         this.handleEditModalOpen();
     }
     deleteStudentRequested(studentid) {
@@ -106,17 +113,21 @@ class Classroom extends Component {
                 studentIdBeingEdited: studentid
             }
         );
+        //show confirm modal
         this.handleDeleteModalOpen();
     }
+
     deleteStudent(studentid) {
-        //show confirm modal
         this.props.callbackDeleteStudent(studentid);
     }
+
+    // rules the display list or grid
     handleIndexTabChange(value) {
         this.setState({
             slideIndex: value,
         });
     };
+    // rules the size of the grid items
     handleSliderValueChange(event, value) {
         this.setState({
             sizePicture: value,
@@ -139,7 +150,7 @@ class Classroom extends Component {
             />,
         ];
 
-        const editModalActions = [
+        const editStudentActions = [
             <FlatButton
                 label="Cancel"
                 primary={true}
@@ -174,6 +185,7 @@ class Classroom extends Component {
                 </div>
             );
         };
+        
         //List view for students
         const listView = (<Table
             fixedHeader={this.state.tableConfig.fixedHeader}
@@ -218,7 +230,7 @@ class Classroom extends Component {
             </TableBody>
         </Table>);
 
-        //Grid VIew for students
+        //Grid View for students
         const gridView = (
             <div >
                 <div className="slider-container">
@@ -289,7 +301,7 @@ class Classroom extends Component {
                 <div>
                     <Dialog
                         title="Edit student"
-                        actions={editModalActions}
+                        actions={editStudentActions}
                         modal={false}
                         open={this.state.editModalOpen}
                         onRequestClose={() => { this.handleEditModalClose() }}
@@ -317,7 +329,7 @@ class Classroom extends Component {
                         open={this.state.deleteModalOpen}
                         onRequestClose={() => { this.handleDeleteModalClose() }}
                     >
-                        Delete Student ({this.props.studentList[this.state.studentIdBeingEdited].firstname+" "+this.props.studentList[this.state.studentIdBeingEdited].lastname}) ?
+                        Delete Student ({this.props.studentList[this.state.studentIdBeingEdited].firstname + " " + this.props.studentList[this.state.studentIdBeingEdited].lastname}) ?
                     </Dialog>
                 </div>
             </section>
