@@ -37,6 +37,7 @@ class Classroom extends Component {
             studentFirstnameBeingEdited: "",
             studentLastnameBeingEdited: "",
             editModalOpen: false,
+            deleteModalOpen: false,
             slideIndex: 0,
             sizePicture: 0.5,
             tableConfig: {
@@ -60,6 +61,14 @@ class Classroom extends Component {
 
     handleEditModalClose() {
         this.setState({ editModalOpen: false });
+    }
+
+    // Delete modal handlers
+    handleDeleteModalClose() {
+        this.setState({ deleteModalOpen: false });
+    }
+    handleDeleteModalOpen() {
+        this.setState({ deleteModalOpen: true });
     }
 
     handleEditModalConfirm() {
@@ -91,9 +100,16 @@ class Classroom extends Component {
             });
         this.handleEditModalOpen();
     }
+    deleteStudentRequested(studentid) {
+        this.setState(
+            {
+                studentIdBeingEdited: studentid
+            }
+        );
+        this.handleDeleteModalOpen();
+    }
     deleteStudent(studentid) {
         //show confirm modal
-        console.log('delete student', studentid);
         this.props.callbackDeleteStudent(studentid);
     }
     handleIndexTabChange(value) {
@@ -107,6 +123,22 @@ class Classroom extends Component {
         });
     }
     render() {
+        const deleteStudentActions = [
+            <FlatButton
+                label="Cancel"
+                primary={true}
+                onClick={() => this.handleDeleteModalClose()}
+            />,
+            <FlatButton
+                label="Delete"
+                primary={true}
+                onClick={() => {
+                    this.deleteStudent(this.state.studentIdBeingEdited);
+                    this.handleDeleteModalClose();
+                }}
+            />,
+        ];
+
         const editModalActions = [
             <FlatButton
                 label="Cancel"
@@ -136,7 +168,7 @@ class Classroom extends Component {
                 <IconButton
                         iconClassName={isWhiteTheme ? 'material-icons white' : 'material-icons'}
                         tooltip="Delete student"
-                        onClick={() => { this.deleteStudent(index) }}
+                        onClick={() => { this.deleteStudentRequested(index) }}
                     >
                         delete</IconButton>
                 </div>
@@ -278,6 +310,14 @@ class Classroom extends Component {
                                 onChange={(event) => { this.handleLastnameChange(event) }}
                             />
                         </div>
+                    </Dialog>
+                    <Dialog
+                        actions={deleteStudentActions}
+                        modal={false}
+                        open={this.state.deleteModalOpen}
+                        onRequestClose={() => { this.handleDeleteModalClose() }}
+                    >
+                        Delete Student ({this.props.studentList[this.state.studentIdBeingEdited].firstname+" "+this.props.studentList[this.state.studentIdBeingEdited].lastname}) ?
                     </Dialog>
                 </div>
             </section>
