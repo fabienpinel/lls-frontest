@@ -7,6 +7,6 @@
 .slider-container{
     padding: 20px;
 }
-.gridtile:hover{
+.gridtile>img:hover{
     background: grey;
 }

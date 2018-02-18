@@ -15,6 +15,9 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { GridList, GridTile } from 'material-ui/GridList';
 import Subheader from 'material-ui/Subheader';
 import Slider from 'material-ui/Slider';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 import './classroom.css';
 
 // Style to inject in component to override inline css
@@ -30,6 +33,10 @@ class Classroom extends Component {
     constructor() {
         super();
         this.state = {
+            studentIdBeingEdited: 0,
+            studentFirstnameBeingEdited: "",
+            studentLastnameBeingEdited: "",
+            editModalOpen: false,
             slideIndex: 0,
             sizePicture: 0.5,
             tableConfig: {
@@ -45,9 +52,44 @@ class Classroom extends Component {
             }
         };
     }
+
+    // Edit modal handlers
+    handleEditModalOpen() {
+        this.setState({ editModalOpen: true });
+    }
+
+    handleEditModalClose() {
+        this.setState({ editModalOpen: false });
+    }
+
+    handleEditModalConfirm() {
+        //save the edit
+        this.props.callbackEditStudent(
+            this.state.studentIdBeingEdited,
+            this.state.studentFirstnameBeingEdited,
+            this.state.studentLastnameBeingEdited);
+        this.handleEditModalClose();
+    }
+    handleFirstnameChange = (event) => {
+        this.setState({
+            studentFirstnameBeingEdited: event.target.value,
+        });
+    };
+    handleLastnameChange = (event) => {
+        this.setState({
+            studentLastnameBeingEdited: event.target.value,
+        });
+    };
+
     editStudent(studentid) {
         // show edit modal
-        console.log('edit student', studentid);
+        this.setState(
+            {
+                studentIdBeingEdited: studentid,
+                studentFirstnameBeingEdited: this.props.studentList[studentid].firstname,
+                studentLastnameBeingEdited: this.props.studentList[studentid].lastname
+            });
+        this.handleEditModalOpen();
     }
     deleteStudent(studentid) {
         //show confirm modal
@@ -65,12 +107,26 @@ class Classroom extends Component {
         });
     }
     render() {
+        const editModalActions = [
+            <FlatButton
+                label="Cancel"
+                primary={true}
+                onClick={() => { this.handleEditModalClose() }}
+            />,
+            <FlatButton
+                label="Confirm"
+                primary={true}
+                keyboardFocused={true}
+                onClick={() => { this.handleEditModalConfirm() }}
+            />,
+        ];
+
         // action buttons (common for both views)
         const actionButtons = (index, isWhiteTheme = false) => {
             return (
                 <div>
                     <IconButton
-                        iconClassName={isWhiteTheme? 'material-icons white': 'material-icons'}
+                        iconClassName={isWhiteTheme ? 'material-icons white' : 'material-icons'}
                         tooltip="Edit student"
                         data-id={index}
                         onClick={() => { this.editStudent(index) }}
@@ -78,7 +134,7 @@ class Classroom extends Component {
                         edit</IconButton>
                     &nbsp;
                 <IconButton
-                        iconClassName={isWhiteTheme? 'material-icons white': 'material-icons'}
+                        iconClassName={isWhiteTheme ? 'material-icons white' : 'material-icons'}
                         tooltip="Delete student"
                         onClick={() => { this.deleteStudent(index) }}
                     >
@@ -148,11 +204,10 @@ class Classroom extends Component {
                         <GridTile
                             className="gridtile"
                             key={student.firstname + "" + student.lastname}
-                            title={student.firstname + "" + student.lastname}
+                            title={student.firstname + " " + student.lastname}
                             cols={2}
                             rows={2}
                             style={{ cursor: 'pointer' }}
-                            onClick={() => { this.editStudent(index) }}
                             actionIcon={
                                 // no need to display the action button when the profiles are very small
                                 // when clicking on the picture they will be able to edit and delete
@@ -161,7 +216,8 @@ class Classroom extends Component {
                         >
                             <img
                                 alt="student profile"
-                                src={student.picture} />
+                                src={student.picture}
+                                onClick={() => { this.editStudent(index) }} />
                         </GridTile>
                     ))}
                 </GridList>
@@ -198,6 +254,32 @@ class Classroom extends Component {
                         </Col>
                     </Row>
                 </Grid>
+                <div>
+                    <Dialog
+                        title="Edit student"
+                        actions={editModalActions}
+                        modal={false}
+                        open={this.state.editModalOpen}
+                        onRequestClose={() => { this.handleEditModalClose() }}
+                    >
+                        Please update student information and click Confirm to save or Cancel to delete any change done.
+                        <div>
+                            <TextField
+                                hintText="Student's firstname"
+                                floatingLabelText="Firstname"
+                                value={this.state.studentFirstnameBeingEdited}
+                                onChange={(event) => { this.handleFirstnameChange(event) }}
+
+                            /><br />
+                            <TextField
+                                hintText="Student's lastname"
+                                floatingLabelText="Lastname"
+                                value={this.state.studentLastnameBeingEdited}
+                                onChange={(event) => { this.handleLastnameChange(event) }}
+                            />
+                        </div>
+                    </Dialog>
+                </div>
             </section>
         );
     }
