@@ -59,6 +59,19 @@ class App extends Component {
     )
   }
 
+  // Add
+  onAddStudentRequested(newStudentFirstname, newStudentLastname) {
+    let allTheStudents = this.state.students;
+    allTheStudents.push({
+      firstname: newStudentFirstname,
+      lastname: newStudentLastname,
+      picture: "./standard-pic.png"
+    })
+    this.setState(
+      { students: allTheStudents }
+    )
+  }
+
   render() {
     return (
       <MuiThemeProvider>
@@ -71,11 +84,14 @@ class App extends Component {
           <Classroom
             studentList={this.state.students}
             callbackDeleteStudent={(studentid) => this.onDeleteStudentRequested(studentid)}
+            callbackAddStudent={
+              (newStudentFirstname, newStudentLastname) => this.onAddStudentRequested(newStudentFirstname, newStudentLastname)
+            }
             callbackEditStudent={
               (studentid, newStudentFirstname, newStudentLastname) => this.onEditStudentRequested(studentid, newStudentFirstname, newStudentLastname)
-              }/>
+            } />
           <br />
-        <Footer />
+          <Footer />
         </div>
       </MuiThemeProvider>
 

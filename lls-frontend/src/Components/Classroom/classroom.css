@@ -10,3 +10,7 @@
 .gridtile>img:hover{
     background: grey;
 }
+.add-student-container{
+    text-align: center;
+    padding-top: 40px;
+}

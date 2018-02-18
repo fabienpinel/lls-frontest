@@ -18,6 +18,7 @@ import Slider from 'material-ui/Slider';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import './classroom.css';
 
 // Style to inject in component to override inline css
@@ -38,6 +39,7 @@ class Classroom extends Component {
             studentLastnameBeingEdited: "",
             editModalOpen: false,
             deleteModalOpen: false,
+            addModalOpen: false,
             slideIndex: 0,
             sizePicture: 0.5,
             tableConfig: {
@@ -57,6 +59,15 @@ class Classroom extends Component {
     /*
         MODAL display handlers
     */
+    // Add modal handlers
+    handleAddModalOpen() {
+        this.setState({ addModalOpen: true });
+    }
+
+    handleAddModalClose() {
+        this.setState({ addModalOpen: false });
+    }
+
     // Edit modal handlers
     handleEditModalOpen() {
         this.setState({ editModalOpen: true });
@@ -69,6 +80,10 @@ class Classroom extends Component {
     // Delete modal handlers
     handleDeleteModalClose() {
         this.setState({ deleteModalOpen: false });
+        this.setState(
+            {
+                studentIdBeingEdited: 0,
+            });
     }
     handleDeleteModalOpen() {
         this.setState({ deleteModalOpen: true });
@@ -82,6 +97,15 @@ class Classroom extends Component {
             this.state.studentLastnameBeingEdited);
         this.handleEditModalClose();
     }
+
+    handleAddModalConfirm() {
+        //save the edit
+        this.props.callbackAddStudent(
+            this.state.studentFirstnameBeingEdited,
+            this.state.studentLastnameBeingEdited);
+        this.handleAddModalClose();
+    }
+
     /*
         Form input changes
     */
@@ -145,10 +169,28 @@ class Classroom extends Component {
                 primary={true}
                 onClick={() => {
                     this.deleteStudent(this.state.studentIdBeingEdited);
+                    if (this.state.editModalOpen) {
+                        this.handleEditModalClose();
+                    }
                     this.handleDeleteModalClose();
                 }}
             />,
         ];
+
+        const addStudentActions = [
+            <FlatButton
+                label="Cancel"
+                primary={true}
+                onClick={() => { this.handleAddModalClose() }}
+            />,
+            <FlatButton
+                label="Add"
+                primary={true}
+                keyboardFocused={true}
+                onClick={() => { this.handleAddModalConfirm() }}
+            />,
+        ];
+
 
         const editStudentActions = [
             <FlatButton
@@ -185,7 +227,70 @@ class Classroom extends Component {
                 </div>
             );
         };
-        
+
+        const dialogs = (
+            <div>
+                <Dialog
+                    title="Add a student"
+                    actions={addStudentActions}
+                    modal={false}
+                    open={this.state.addModalOpen}
+                    onRequestClose={() => { this.handleAddModalClose() }}
+                >
+                    Please Fill student's information and click Add to save or Cancel to cancel all the changes.
+                        <div>
+                        <TextField
+                            hintText="Student's firstname"
+                            floatingLabelText="Firstname"
+                            value={this.state.studentFirstnameBeingEdited}
+                            onChange={(event) => { this.handleFirstnameChange(event) }}
+                        /><br />
+                        <TextField
+                            hintText="Student's lastname"
+                            floatingLabelText="Lastname"
+                            value={this.state.studentLastnameBeingEdited}
+                            onChange={(event) => { this.handleLastnameChange(event) }}
+                        />
+                    </div>
+                </Dialog>
+
+                <Dialog
+                    title="Edit student"
+                    actions={editStudentActions}
+                    modal={false}
+                    open={this.state.editModalOpen}
+                    onRequestClose={() => { this.handleEditModalClose() }}
+                >
+                    Please update student information and click Confirm to save or Cancel to delete any change done.
+                        <div>
+                        <TextField
+                            hintText="Student's firstname"
+                            floatingLabelText="Firstname"
+                            value={this.state.studentFirstnameBeingEdited}
+                            onChange={(event) => { this.handleFirstnameChange(event) }}
+                        /><br />
+                        <TextField
+                            hintText="Student's lastname"
+                            floatingLabelText="Lastname"
+                            value={this.state.studentLastnameBeingEdited}
+                            onChange={(event) => { this.handleLastnameChange(event) }}
+                        />
+                        <br />
+                        <p>You can delete this student by clicking on Delete Student. Be aware this cannot be undone.</p>
+                        <RaisedButton label="Delete student" secondary={true} onClick={() => { this.deleteStudentRequested(this.state.studentIdBeingEdited) }} />
+                    </div>
+                </Dialog>
+                <Dialog
+                    actions={deleteStudentActions}
+                    modal={false}
+                    open={this.state.deleteModalOpen}
+                    onRequestClose={() => { this.handleDeleteModalClose() }}
+                >
+                    Delete Student ({this.props.studentList[this.state.studentIdBeingEdited].firstname + " " + this.props.studentList[this.state.studentIdBeingEdited].lastname}) ?
+                    </Dialog>
+            </div>
+        );
+
         //List view for students
         const listView = (<Table
             fixedHeader={this.state.tableConfig.fixedHeader}
@@ -291,47 +396,20 @@ class Classroom extends Component {
                                             value={1}
                                         />
                                     </Tabs>
-
+                                    <div className="add-student-container">
+                                        <RaisedButton
+                                            label="Add a student"
+                                            primary={true}
+                                            onClick={() => { this.handleAddModalOpen() }}
+                                            icon={<FontIcon className="material-icons">add</FontIcon>} />
+                                    </div>
                                     {(this.state.slideIndex === 0) ? listView : gridView}
                                 </Paper>
                             </div>
                         </Col>
                     </Row>
                 </Grid>
-                <div>
-                    <Dialog
-                        title="Edit student"
-                        actions={editStudentActions}
-                        modal={false}
-                        open={this.state.editModalOpen}
-                        onRequestClose={() => { this.handleEditModalClose() }}
-                    >
-                        Please update student information and click Confirm to save or Cancel to delete any change done.
-                        <div>
-                            <TextField
-                                hintText="Student's firstname"
-                                floatingLabelText="Firstname"
-                                value={this.state.studentFirstnameBeingEdited}
-                                onChange={(event) => { this.handleFirstnameChange(event) }}
-
-                            /><br />
-                            <TextField
-                                hintText="Student's lastname"
-                                floatingLabelText="Lastname"
-                                value={this.state.studentLastnameBeingEdited}
-                                onChange={(event) => { this.handleLastnameChange(event) }}
-                            />
-                        </div>
-                    </Dialog>
-                    <Dialog
-                        actions={deleteStudentActions}
-                        modal={false}
-                        open={this.state.deleteModalOpen}
-                        onRequestClose={() => { this.handleDeleteModalClose() }}
-                    >
-                        Delete Student ({this.props.studentList[this.state.studentIdBeingEdited].firstname + " " + this.props.studentList[this.state.studentIdBeingEdited].lastname}) ?
-                    </Dialog>
-                </div>
+                {(this.props.studentList.length > 0) ? dialogs : null}
             </section>
         );
     }
