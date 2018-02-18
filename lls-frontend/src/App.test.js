@@ -4,6 +4,7 @@ import App from './App';
 
 //Just unit testing App for now.
 jest.mock('./Components/Classroom/classroom.js', () => 'mock-classroom')
+jest.mock('./Components/Footer/footer.js', () => 'mock-footer')
 
 let app;
 beforeEach(() => {

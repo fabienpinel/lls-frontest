@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import Classroom from './Components/Classroom/classroom';
+import Footer from './Components/Footer/footer';
 import './App.css';
 
 class App extends Component {
@@ -66,12 +67,15 @@ class App extends Component {
             title="Classroom manager"
             iconClassNameRight="muidocs-icon-class"
           />
+          <br />
           <Classroom
             studentList={this.state.students}
             callbackDeleteStudent={(studentid) => this.onDeleteStudentRequested(studentid)}
             callbackEditStudent={
               (studentid, newStudentFirstname, newStudentLastname) => this.onEditStudentRequested(studentid, newStudentFirstname, newStudentLastname)
               }/>
+          <br />
+        <Footer />
         </div>
       </MuiThemeProvider>
 
