@@ -7,6 +7,7 @@ jest.mock('./Components/Classroom/classroom.js', () => 'mock-classroom')
 jest.mock('./Components/Footer/footer.js', () => 'mock-footer')
 
 let app;
+const INITIAL_NUMBER_OF_STUDENTS = 7;
 beforeEach(() => {
   const div = document.createElement('div');
   app = ReactDOM.render(<App />, div);
@@ -20,7 +21,7 @@ it('renders without crashing', () => {
 test('App init with data', () => {
   expect(app.state).toBeDefined();
   expect(app.state.students).toBeDefined();
-  expect(app.state.students.length).toEqual(5);
+  expect(app.state.students.length).toEqual(INITIAL_NUMBER_OF_STUDENTS);
 });
 
 test('DELETE entry from array properly', () => {
@@ -30,10 +31,10 @@ test('DELETE entry from array properly', () => {
 });
 
 test('ADD 1 new student', () => {
-  expect(app.state.students.length).toEqual(5);
+  expect(app.state.students.length).toEqual(INITIAL_NUMBER_OF_STUDENTS);
   app.onAddStudentRequested("Fabien", "Pinel");
   const size = app.state.students.length;
-  expect(size).toEqual(6);
+  expect(size).toEqual(INITIAL_NUMBER_OF_STUDENTS+1);
   expect(app.state.students[size - 1].firstname).toEqual("Fabien");
   expect(app.state.students[size - 1].lastname).toEqual("Pinel");
 });
@@ -48,21 +49,21 @@ test('EDIT first student of the list', () => {
 });
 
 test('add, edit, delete', () => {
-  expect(app.state.students.length).toEqual(5);
+  expect(app.state.students.length).toEqual(INITIAL_NUMBER_OF_STUDENTS);
   // ADD
   app.onAddStudentRequested("Fabien", "Pinel");
-  expect(app.state.students.length).toEqual(6);
+  expect(app.state.students.length).toEqual(INITIAL_NUMBER_OF_STUDENTS+1);
   const fabienID = app.state.students.length - 1;
 
   // EDIT
   app.onEditStudentRequested(fabienID, "FABIEN", "PINEL");
-  expect(app.state.students.length).toEqual(6);
+  expect(app.state.students.length).toEqual(INITIAL_NUMBER_OF_STUDENTS+1);
   expect(app.state.students[fabienID].firstname).toEqual("FABIEN");
   expect(app.state.students[fabienID].lastname).toEqual("PINEL");
 
   //DELETE
   app.onDeleteStudentRequested(fabienID);
-  expect(app.state.students.length).toEqual(5);
+  expect(app.state.students.length).toEqual(INITIAL_NUMBER_OF_STUDENTS);
 
 
 

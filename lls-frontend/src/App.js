@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
 import Classroom from './Components/Classroom/classroom';
 import Footer from './Components/Footer/footer';
 import './App.css';
+
+// Overriding the standard theme by a softer blue color
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: "rgb(56, 128, 220)",
+  }
+});
 
 class App extends Component {
   constructor() {
@@ -34,6 +42,16 @@ class App extends Component {
           firstname: "Princess",
           lastname: "Diana",
           picture: "./standard-pic.png"
+        },
+        {
+          firstname: "Prince",
+          lastname: "William",
+          picture: "./standard-pic.png"
+        },
+        {
+          firstname: "Prince",
+          lastname: "Harry",
+          picture: "./standard-pic.png"
         }
       ]
     }
@@ -43,7 +61,7 @@ class App extends Component {
   onDeleteStudentRequested(studentid) {
     this.setState(this.deleteEntryFromArray(this.state.students, studentid));
   }
-
+  // Delete utils
   deleteEntryFromArray(array, entryid) {
     array.splice(entryid, 1);
     return array;
@@ -66,15 +84,15 @@ class App extends Component {
       firstname: newStudentFirstname,
       lastname: newStudentLastname,
       picture: "./standard-pic.png"
-    })
+    });
     this.setState(
       { students: allTheStudents }
-    )
+    );
   }
 
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div className="App">
           <AppBar
             title="Classroom manager"

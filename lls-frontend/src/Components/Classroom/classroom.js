@@ -61,9 +61,14 @@ class Classroom extends Component {
     */
     // Add modal handlers
     handleAddModalOpen() {
-        this.setState({ addModalOpen: true });
-    }
 
+        this.setState(
+            {
+                addModalOpen: true,
+                studentFirstnameBeingEdited: "",
+                studentLastnameBeingEdited: ""
+            });
+    }
     handleAddModalClose() {
         this.setState({ addModalOpen: false });
     }
@@ -72,7 +77,6 @@ class Classroom extends Component {
     handleEditModalOpen() {
         this.setState({ editModalOpen: true });
     }
-
     handleEditModalClose() {
         this.setState({ editModalOpen: false });
     }
@@ -89,6 +93,9 @@ class Classroom extends Component {
         this.setState({ deleteModalOpen: true });
     }
 
+    /*
+        PERFORMING ACTIONS 
+    */
     handleEditModalConfirm() {
         //save the edit
         this.props.callbackEditStudent(
@@ -99,12 +106,18 @@ class Classroom extends Component {
     }
 
     handleAddModalConfirm() {
-        //save the edit
+        //save the new student
         this.props.callbackAddStudent(
             this.state.studentFirstnameBeingEdited,
             this.state.studentLastnameBeingEdited);
         this.handleAddModalClose();
     }
+
+    deleteStudent(studentid) {
+        //delete student
+        this.props.callbackDeleteStudent(studentid);
+    }
+
 
     /*
         Form input changes
@@ -121,7 +134,6 @@ class Classroom extends Component {
     };
 
     editStudent(studentid) {
-        // show edit modal
         this.setState(
             {
                 studentIdBeingEdited: studentid,
@@ -140,11 +152,7 @@ class Classroom extends Component {
         //show confirm modal
         this.handleDeleteModalOpen();
     }
-
-    deleteStudent(studentid) {
-        this.props.callbackDeleteStudent(studentid);
-    }
-
+   
     // rules the display list or grid
     handleIndexTabChange(value) {
         this.setState({
@@ -206,7 +214,7 @@ class Classroom extends Component {
             />,
         ];
 
-        // action buttons (common for both views)
+        // action buttons[edit and delete] (common for both views)
         const actionButtons = (index, isWhiteTheme = false) => {
             return (
                 <div>
@@ -229,7 +237,7 @@ class Classroom extends Component {
                 </div>
             );
         };
-
+        // contains add, edit and delete dialogs
         const dialogs = (
             <div>
                 <Dialog
@@ -361,6 +369,7 @@ class Classroom extends Component {
                             style={{ cursor: 'pointer' }}
                             actionIcon={
                                 // no need to display the action button when the profiles are very small
+                                // it creates display issues
                                 // when clicking on the picture they will be able to edit and delete
                                 (this.state.sizePicture > 0.4) ? actionButtons(index, true) : null
                             }
